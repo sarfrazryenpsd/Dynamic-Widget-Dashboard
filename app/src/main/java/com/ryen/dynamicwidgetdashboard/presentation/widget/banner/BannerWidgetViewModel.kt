@@ -1,5 +1,6 @@
 package com.ryen.dynamicwidgetdashboard.presentation.widget.banner
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ryen.dynamicwidgetdashboard.domain.banner.BannerRepository
@@ -11,26 +12,28 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class BannerWidget(
+data class Banner(
     val title: String,
     val subtitle: String
 )
 
 data class BannerState(
-    val instanceId: String = "",
-    val banners: List<BannerWidget> = emptyList(),
+    val banners: List<Banner> = emptyList(),
     val isLoading: Boolean = false,
     val isSingleBanner: Boolean = true,
     val error: String? = null
 )
 
 @HiltViewModel
-class BannerViewModel @Inject constructor(
-    private val bannerRepository: BannerRepository
-): ViewModel(){
+class BannerWidgetViewModel @Inject constructor(
+    private val bannerRepository: BannerRepository,
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
+
 
     private val _uiState: MutableStateFlow<BannerState> = MutableStateFlow(BannerState())
     val uiState = _uiState.asStateFlow()
+
 
     fun loadBanners(instanceId: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -44,7 +47,7 @@ class BannerViewModel @Inject constructor(
             try {
                 val bannerData = bannerRepository.getBanners(instanceId)
                 val bannersDto = bannerData.map {
-                    BannerWidget(
+                    Banner(
                         title = it.title,
                         subtitle = it.subtitle
                     )
@@ -53,7 +56,6 @@ class BannerViewModel @Inject constructor(
 
                 _uiState.update { state ->
                     state.copy(
-                        instanceId = instanceId,
                         banners = bannersDto,
                         isSingleBanner = isSingleBanner,
                         isLoading = false

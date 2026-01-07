@@ -11,12 +11,12 @@ import javax.inject.Inject
 
 
 data class ListWidget(
-    val title: String,
-    val subtitle: String
+    val name: String,
+    val surname: String
 )
 
 @HiltViewModel
-class ListViewModel @Inject constructor(
+class ListWidgetViewModel @Inject constructor(
     private val repository: ListRepository
 ) : ViewModel(){
 
@@ -33,8 +33,8 @@ class ListViewModel @Inject constructor(
 
                 val listDto = listData.map {
                     ListWidget(
-                        title = it.title,
-                        subtitle = it.subtitle
+                        name = it.name,
+                        surname = it.surname
                     )
                 }
 
