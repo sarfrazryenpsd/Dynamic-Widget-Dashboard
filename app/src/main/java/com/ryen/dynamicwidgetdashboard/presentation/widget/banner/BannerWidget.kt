@@ -1,6 +1,5 @@
 package com.ryen.dynamicwidgetdashboard.presentation.widget.banner
 
-import android.R.attr.maxWidth
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -74,7 +73,7 @@ fun BannerItem(
     isSingleBanner: Boolean
 ) {
 
-    val cardWidth = maxWidth * if (isSingleBanner) 1f else 0.8f
+    val cardWidth = if (isSingleBanner) 1f else 0.8f
 
     Card(
         elevation = CardDefaults.cardElevation(2.dp),
